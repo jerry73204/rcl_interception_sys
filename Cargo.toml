@@ -1,0 +1,8 @@
+[package]
+name = "rcl_interception_sys"
+version = "0.1.0"
+edition = "2024"
+description = "FFI type definitions mirroring ROS 2 RCL/rosidl C headers for LD_PRELOAD interception"
+license = "Apache-2.0"
+
+[dependencies]
