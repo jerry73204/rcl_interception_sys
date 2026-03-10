@@ -54,3 +54,9 @@ pub const ROS_TYPE_MESSAGE: u8 = 18;
 /// The identifier string used to request the introspection_c typesupport.
 pub const TYPESUPPORT_INTROSPECTION_C_IDENTIFIER: &[u8] =
     b"rosidl_typesupport_introspection_c\0";
+
+/// The identifier string used to request the introspection_cpp typesupport.
+/// The C++ introspection structs have the same memory layout as the C ones,
+/// so we can use `MessageMembers` / `MessageMember` for both.
+pub const TYPESUPPORT_INTROSPECTION_CPP_IDENTIFIER: &[u8] =
+    b"rosidl_typesupport_introspection_cpp\0";
