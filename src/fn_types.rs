@@ -95,3 +95,22 @@ pub type FnRmwTakeWithInfo = unsafe extern "C" fn(
     *mut rmw_message_info_t,
     *mut rmw_subscription_allocation_t,
 ) -> rcl_ret_t;
+
+// ---------------------------------------------------------------------------
+// Node accessors (Phase 36 polish — topic-name expansion)
+// ---------------------------------------------------------------------------
+//
+// `rcl_publisher_init` receives a `rcl_node_t*` but topic_name comes in
+// pre-expansion (raw caller-provided form). To normalise topic names
+// for consistent hashing on both producer and consumer sides we read
+// the node's namespace + name and prepend them as needed.
+
+/// `rcl_node_get_name(node) -> *const c_char`
+///
+/// Returns the node's name (without leading slash), or null on error.
+pub type FnRclNodeGetName = unsafe extern "C" fn(*const rcl_node_t) -> *const c_char;
+
+/// `rcl_node_get_namespace(node) -> *const c_char`
+///
+/// Returns the node's namespace (e.g. "/", "/foo"), or null on error.
+pub type FnRclNodeGetNamespace = unsafe extern "C" fn(*const rcl_node_t) -> *const c_char;
