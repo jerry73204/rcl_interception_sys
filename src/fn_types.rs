@@ -46,3 +46,52 @@ pub type FnRclTake = unsafe extern "C" fn(
     *mut rmw_message_info_t,
     *mut rmw_subscription_allocation_t,
 ) -> rcl_ret_t;
+
+// ---------------------------------------------------------------------------
+// RMW function pointer aliases (Phase 36.1)
+// ---------------------------------------------------------------------------
+//
+// The rmw layer sits below rcl and exposes the actual DDS publish/take. Each
+// RMW implementation (rmw_fastrtps_cpp, rmw_cyclonedds_cpp, rmw_connextdds)
+// provides these symbols with identical C signatures. We dlsym them from
+// `librmw_implementation.so` (which forwards to the active RMW at load
+// time) so the interceptor stays RMW-agnostic.
+
+/// `rmw_create_publisher(node, type_support, topic_name, qos, options) -> *rmw_publisher_t`
+pub type FnRmwCreatePublisher = unsafe extern "C" fn(
+    *const rmw_node_t,
+    *const rosidl_message_type_support_t,
+    *const c_char,
+    *const rmw_qos_profile_t,
+    *const rmw_publisher_options_t,
+) -> *mut rmw_publisher_t;
+
+/// `rmw_create_subscription(node, type_support, topic_name, qos, options) -> *rmw_subscription_t`
+pub type FnRmwCreateSubscription = unsafe extern "C" fn(
+    *const rmw_node_t,
+    *const rosidl_message_type_support_t,
+    *const c_char,
+    *const rmw_qos_profile_t,
+    *const rmw_subscription_options_t,
+) -> *mut rmw_subscription_t;
+
+/// `rmw_publish(publisher, ros_message, allocation) -> rmw_ret_t`
+///
+/// `rmw_ret_t` has the same layout as `rcl_ret_t` (i32) across distros.
+pub type FnRmwPublish = unsafe extern "C" fn(
+    *const rmw_publisher_t,
+    *const c_void,
+    *mut rmw_publisher_allocation_t,
+) -> rcl_ret_t;
+
+/// `rmw_take_with_info(subscription, ros_message, taken, message_info, allocation) -> rmw_ret_t`
+///
+/// Returns 0 (RMW_RET_OK) on success. The `taken` out-parameter indicates
+/// whether a sample was actually available.
+pub type FnRmwTakeWithInfo = unsafe extern "C" fn(
+    *const rmw_subscription_t,
+    *mut c_void,
+    *mut bool,
+    *mut rmw_message_info_t,
+    *mut rmw_subscription_allocation_t,
+) -> rcl_ret_t;

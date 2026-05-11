@@ -21,6 +21,7 @@ compile_error!("Enable exactly one distro feature: `humble` or `jazzy` (neither 
 mod bindings;
 pub mod fn_types;
 pub mod opaque;
+pub mod qos;
 
 // Re-export everything from bindgen-generated bindings.
 pub use bindings::*;
@@ -30,6 +31,9 @@ pub use opaque::*;
 
 // Re-export function pointer types at crate root.
 pub use fn_types::*;
+
+// Re-export the layout-aware QoS view at crate root.
+pub use qos::RmwQosProfile;
 
 // ---------------------------------------------------------------------------
 // Convenience aliases (stable across distros)

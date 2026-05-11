@@ -58,3 +58,48 @@ pub struct rmw_subscription_allocation_t {
 pub struct rmw_message_info_t {
     _opaque: [u8; 0],
 }
+
+/// Opaque `rmw_node_t`.
+///
+/// Used only as a pointer in rmw_create_publisher / rmw_create_subscription
+/// signatures. Never dereferenced by the interceptor.
+#[repr(C)]
+pub struct rmw_node_t {
+    _opaque: [u8; 0],
+}
+
+/// Opaque `rmw_publisher_t`.
+#[repr(C)]
+pub struct rmw_publisher_t {
+    _opaque: [u8; 0],
+}
+
+/// Opaque `rmw_subscription_t`.
+#[repr(C)]
+pub struct rmw_subscription_t {
+    _opaque: [u8; 0],
+}
+
+/// Opaque `rmw_qos_profile_t`.
+///
+/// The struct is large and varies across distros (history kind, depth,
+/// reliability, durability, deadline, lifespan, liveliness…). The
+/// interceptor never reads it directly — it only hashes the raw bytes
+/// to detect profile changes. Treated as opaque to avoid the bindgen
+/// dependency tree.
+#[repr(C)]
+pub struct rmw_qos_profile_t {
+    _opaque: [u8; 0],
+}
+
+/// Opaque `rmw_publisher_options_t`.
+#[repr(C)]
+pub struct rmw_publisher_options_t {
+    _opaque: [u8; 0],
+}
+
+/// Opaque `rmw_subscription_options_t`.
+#[repr(C)]
+pub struct rmw_subscription_options_t {
+    _opaque: [u8; 0],
+}
