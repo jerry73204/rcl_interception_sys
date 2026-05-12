@@ -133,6 +133,29 @@ pub struct rcutils_string_map_t {
     pub impl_: *mut std::ffi::c_void,
 }
 
+/// `rcl_arguments_s` — PIMPL handle (one pointer to internal impl).
+/// Treated as opaque except for the pointer width.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct rcl_arguments_t {
+    pub impl_: *mut std::ffi::c_void,
+}
+
+/// `rcl_node_options_s` — partial layout-aware view. We only need
+/// `arguments` for remap resolution; the trailing fields
+/// (enable_rosout, rosout_qos) are not touched. Offsets verified
+/// against `/opt/ros/humble/include/rcl/rcl/node_options.h`:
+/// allocator(40) + use_global_arguments(8 with padding) + arguments(8).
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct rcl_node_options_t {
+    pub allocator: rcutils_allocator_t,
+    pub use_global_arguments: bool,
+    pub _pad_use_global: [u8; 7],
+    pub arguments: rcl_arguments_t,
+    // … trailing fields omitted (enable_rosout, rosout_qos).
+}
+
 /// `rmw_event_s` — layout-aware. Used only to read `event_type`.
 ///
 /// The C definition (Humble + Jazzy) is:

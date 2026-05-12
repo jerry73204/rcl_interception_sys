@@ -166,6 +166,25 @@ pub type FnRclExpandTopicName = unsafe extern "C" fn(
     *mut *mut c_char,
 ) -> rcl_ret_t;
 
+/// `rcl_node_get_options(node) -> const rcl_node_options_t*`
+pub type FnRclNodeGetOptions =
+    unsafe extern "C" fn(*const rcl_node_t) -> *const crate::opaque::rcl_node_options_t;
+
+/// `rcl_get_global_arguments() -> rcl_arguments_t*`
+pub type FnRclGetGlobalArguments =
+    unsafe extern "C" fn() -> *const crate::opaque::rcl_arguments_t;
+
+/// `rcl_remap_topic_name(local, global, topic, node_name, node_ns, allocator, out)`
+pub type FnRclRemapTopicName = unsafe extern "C" fn(
+    *const crate::opaque::rcl_arguments_t,
+    *const crate::opaque::rcl_arguments_t,
+    *const c_char,
+    *const c_char,
+    *const c_char,
+    crate::opaque::rcutils_allocator_t,
+    *mut *mut c_char,
+) -> rcl_ret_t;
+
 /// `rmw_take_event(event_handle, event_info, taken) -> rmw_ret_t`
 ///
 /// `event_info` points to a status struct chosen based on `event->event_type`.
