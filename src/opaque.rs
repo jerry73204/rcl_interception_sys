@@ -104,6 +104,35 @@ pub struct rmw_subscription_options_t {
     _opaque: [u8; 0],
 }
 
+/// `rcutils_allocator_s` — layout-aware (returned by value from
+/// `rcutils_get_default_allocator`, so we need its real size). Matches
+/// the C struct in `rcutils/allocator.h`: 4 function pointers plus a
+/// `void *` state pointer (40 bytes on 64-bit Linux).
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct rcutils_allocator_t {
+    pub allocate: Option<unsafe extern "C" fn(usize, *mut std::ffi::c_void) -> *mut std::ffi::c_void>,
+    pub deallocate: Option<unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void)>,
+    pub reallocate: Option<
+        unsafe extern "C" fn(
+            *mut std::ffi::c_void,
+            usize,
+            *mut std::ffi::c_void,
+        ) -> *mut std::ffi::c_void,
+    >,
+    pub zero_allocate: Option<
+        unsafe extern "C" fn(usize, usize, *mut std::ffi::c_void) -> *mut std::ffi::c_void,
+    >,
+    pub state: *mut std::ffi::c_void,
+}
+
+/// `rcutils_string_map_s` — PIMPL handle (one pointer to internal impl).
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct rcutils_string_map_t {
+    pub impl_: *mut std::ffi::c_void,
+}
+
 /// `rmw_event_s` — layout-aware. Used only to read `event_type`.
 ///
 /// The C definition (Humble + Jazzy) is:

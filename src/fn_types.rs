@@ -133,6 +133,39 @@ pub type FnRmwSubscriptionEventInit = unsafe extern "C" fn(
     i32, // rmw_event_type_t
 ) -> rcl_ret_t;
 
+// ---------------------------------------------------------------------------
+// Topic-name expansion (rcl + rcutils)
+// ---------------------------------------------------------------------------
+
+/// `rcutils_get_default_allocator(void) -> rcutils_allocator_t` (by value).
+pub type FnRcutilsGetDefaultAllocator =
+    unsafe extern "C" fn() -> crate::opaque::rcutils_allocator_t;
+
+/// `rcutils_string_map_init(map, initial_capacity, allocator) -> rcutils_ret_t`
+pub type FnRcutilsStringMapInit = unsafe extern "C" fn(
+    *mut crate::opaque::rcutils_string_map_t,
+    usize,
+    crate::opaque::rcutils_allocator_t,
+) -> i32;
+
+/// `rcutils_string_map_fini(map) -> rcutils_ret_t`
+pub type FnRcutilsStringMapFini =
+    unsafe extern "C" fn(*mut crate::opaque::rcutils_string_map_t) -> i32;
+
+/// `rcl_get_default_topic_name_substitutions(map) -> rcl_ret_t`
+pub type FnRclGetDefaultTopicNameSubstitutions =
+    unsafe extern "C" fn(*mut crate::opaque::rcutils_string_map_t) -> rcl_ret_t;
+
+/// `rcl_expand_topic_name(input, node_name, node_ns, subs, allocator, out)`
+pub type FnRclExpandTopicName = unsafe extern "C" fn(
+    *const c_char,
+    *const c_char,
+    *const c_char,
+    *const crate::opaque::rcutils_string_map_t,
+    crate::opaque::rcutils_allocator_t,
+    *mut *mut c_char,
+) -> rcl_ret_t;
+
 /// `rmw_take_event(event_handle, event_info, taken) -> rmw_ret_t`
 ///
 /// `event_info` points to a status struct chosen based on `event->event_type`.
