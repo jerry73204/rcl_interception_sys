@@ -103,3 +103,22 @@ pub struct rmw_publisher_options_t {
 pub struct rmw_subscription_options_t {
     _opaque: [u8; 0],
 }
+
+/// `rmw_event_s` — layout-aware. Used only to read `event_type`.
+///
+/// The C definition (Humble + Jazzy) is:
+///   const char * implementation_identifier;
+///   void * data;
+///   rmw_event_type_t event_type;  // enum, i32
+///
+/// Plus trailing padding (struct alignment of 8 bytes). We only ever
+/// read `event_type` after `rmw_publisher_event_init` /
+/// `rmw_subscription_event_init` populates the struct. The other two
+/// fields are owned by the RMW implementation; we don't touch them.
+#[repr(C)]
+#[derive(Debug)]
+pub struct rmw_event_t {
+    pub implementation_identifier: *const std::os::raw::c_char,
+    pub data: *mut std::ffi::c_void,
+    pub event_type: i32,
+}

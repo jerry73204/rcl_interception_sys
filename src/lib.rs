@@ -19,6 +19,7 @@ compile_error!("Enable exactly one distro feature: `humble` or `jazzy` (both are
 compile_error!("Enable exactly one distro feature: `humble` or `jazzy` (neither is set)");
 
 mod bindings;
+pub mod events;
 pub mod fn_types;
 pub mod opaque;
 pub mod qos;

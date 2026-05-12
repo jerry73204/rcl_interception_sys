@@ -114,3 +114,30 @@ pub type FnRclNodeGetName = unsafe extern "C" fn(*const rcl_node_t) -> *const c_
 ///
 /// Returns the node's namespace (e.g. "/", "/foo"), or null on error.
 pub type FnRclNodeGetNamespace = unsafe extern "C" fn(*const rcl_node_t) -> *const c_char;
+
+// ---------------------------------------------------------------------------
+// RMW event API (DDS event callbacks)
+// ---------------------------------------------------------------------------
+
+/// `rmw_publisher_event_init(event, publisher, event_type) -> rmw_ret_t`
+pub type FnRmwPublisherEventInit = unsafe extern "C" fn(
+    *mut rmw_event_t,
+    *const rmw_publisher_t,
+    i32, // rmw_event_type_t
+) -> rcl_ret_t;
+
+/// `rmw_subscription_event_init(event, subscription, event_type) -> rmw_ret_t`
+pub type FnRmwSubscriptionEventInit = unsafe extern "C" fn(
+    *mut rmw_event_t,
+    *const rmw_subscription_t,
+    i32, // rmw_event_type_t
+) -> rcl_ret_t;
+
+/// `rmw_take_event(event_handle, event_info, taken) -> rmw_ret_t`
+///
+/// `event_info` points to a status struct chosen based on `event->event_type`.
+pub type FnRmwTakeEvent = unsafe extern "C" fn(
+    *const rmw_event_t,
+    *mut c_void,
+    *mut bool,
+) -> rcl_ret_t;
