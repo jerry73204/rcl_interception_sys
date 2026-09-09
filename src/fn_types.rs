@@ -170,18 +170,25 @@ pub type FnRclExpandTopicName = unsafe extern "C" fn(
 pub type FnRclNodeGetOptions =
     unsafe extern "C" fn(*const rcl_node_t) -> *const crate::opaque::rcl_node_options_t;
 
-/// `rcl_get_global_arguments() -> rcl_arguments_t*`
-pub type FnRclGetGlobalArguments =
-    unsafe extern "C" fn() -> *const crate::opaque::rcl_arguments_t;
-
-/// `rcl_remap_topic_name(local, global, topic, node_name, node_ns, allocator, out)`
-pub type FnRclRemapTopicName = unsafe extern "C" fn(
-    *const crate::opaque::rcl_arguments_t,
-    *const crate::opaque::rcl_arguments_t,
-    *const c_char,
-    *const c_char,
+/// `rcl_node_resolve_name(node, input, allocator, is_service, only_expand, out)`
+///
+/// The one call rcl itself makes from `rcl_publisher_init` and
+/// `rcl_subscription_init`: it expands `~`, the node namespace and the
+/// `{node}`/`{ns}` substitutions, AND applies the node's local and global
+/// remap rules, in the order rcl defines. Using it is what makes the
+/// interceptor name a topic the same string `ros2 topic list` reports.
+///
+/// It replaced a hand-rolled expand-then-remap pair that could never work:
+/// the remap half called `rcl_get_global_arguments`, which is not a symbol
+/// rcl exports (it appears once in `rcl/remap.h`, inside a doc comment). The
+/// group resolved to `None` on every ROS installation, so every remapped
+/// topic was recorded under its un-remapped name, silently.
+pub type FnRclNodeResolveName = unsafe extern "C" fn(
+    *const rcl_node_t,
     *const c_char,
     crate::opaque::rcutils_allocator_t,
+    bool,
+    bool,
     *mut *mut c_char,
 ) -> rcl_ret_t;
 
