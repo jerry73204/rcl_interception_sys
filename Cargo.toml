@@ -8,9 +8,9 @@ license = "Apache-2.0"
 [features]
 humble = []
 jazzy = []
-generate-bindings = ["dep:bindgen"]
+generate-bindings = []
 
 [dependencies]
 
 [build-dependencies]
-bindgen = { version = "0.71", optional = true }
+bindgen = "0.71"
