@@ -24,11 +24,13 @@ fn generate() {
     };
 
     // Only the ROS packages whose headers we transitively include.
+    // rcutils: Jazzy's rosidl_runtime_c/type_hash.h includes rcutils/allocator.h.
     const REQUIRED_PACKAGES: &[&str] = &[
         "rosidl_runtime_c",
         "rosidl_typesupport_interface",
         "rosidl_typesupport_introspection_c",
         "builtin_interfaces",
+        "rcutils",
     ];
 
     // Search all AMENT_PREFIX_PATH entries for the required package include dirs.
